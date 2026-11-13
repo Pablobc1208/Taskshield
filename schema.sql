@@ -1,43 +1,15 @@
--- =====================================================================
---  Intranet de Soporte Informático - Script de base de datos
---  Archivo: doc/schema.sql
---  Autor:   Pablo Barrera Corbacho
---  Motor:   MySQL 8.0.16+ / MariaDB 10.2+ (InnoDB, utf8mb4)
---
---  Contenido:
---    1. Creación de la base de datos
---    2. Tabla `tecnicos`
---    3. Tabla `incidencias` (con clave foránea a `tecnicos`)
---    4. Datos de prueba
---    5. Consultas de verificación (comentadas)
---
---  Cómo importarlo:
---    - phpMyAdmin: pestaña "Importar" -> seleccionar este archivo.
---    - Consola:    mysql -u root -p < doc/schema.sql
--- =====================================================================
-
 -- ---------------------------------------------------------------------
 -- 1. Base de datos
 -- ---------------------------------------------------------------------
 DROP DATABASE IF EXISTS intranet_soporte;
 
-CREATE DATABASE intranet_soporte
-    CHARACTER SET utf8mb4
-    COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE IF NOT EXISTS intranet_soporte;
+   
 
 USE intranet_soporte;
 
 -- ---------------------------------------------------------------------
 -- 2. Tabla de técnicos
--- ---------------------------------------------------------------------
---  `tareas_activas` es el contador que la transacción de
---  "Asignación Avanzada" incrementa en +1 al asignar una incidencia.
---
---  La restricción CHECK limita la carga a un máximo de 5 tareas
---  activas por técnico. Sirve para el caso de prueba 3: si se asigna
---  una incidencia a un técnico que ya tiene 5, el SEGUNDO UPDATE
---  (el del contador) lanza una excepción y la transacción debe hacer
---  rollBack(), deshaciendo también el PRIMER UPDATE de la incidencia.
 -- ---------------------------------------------------------------------
 CREATE TABLE tecnicos (
     id              INT UNSIGNED     NOT NULL AUTO_INCREMENT,
@@ -50,18 +22,10 @@ CREATE TABLE tecnicos (
     PRIMARY KEY (id),
     UNIQUE KEY uq_tecnicos_email (email),
     CONSTRAINT chk_tareas_activas CHECK (tareas_activas <= 5)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+);
 
 -- ---------------------------------------------------------------------
 -- 3. Tabla de incidencias
--- ---------------------------------------------------------------------
---  - `estado`: Pendiente / En Proceso / Resuelta (editar_incidencia.php).
---  - `prioridad`: Baja / Media / Alta / Urgente (nueva_incidencia.php).
---  - `tecnico_id`: NULL mientras no esté asignada. Si se intenta
---    asignar un técnico que no existe, la clave foránea impide
---    guardar el dato (no hay datos huérfanos).
---  - ON DELETE SET NULL: si se borra un técnico, sus incidencias
---    quedan sin asignar en lugar de borrarse.
 -- ---------------------------------------------------------------------
 CREATE TABLE incidencias (
     id                   INT UNSIGNED  NOT NULL AUTO_INCREMENT,
@@ -84,17 +48,11 @@ CREATE TABLE incidencias (
         FOREIGN KEY (tecnico_id) REFERENCES tecnicos (id)
         ON UPDATE CASCADE
         ON DELETE SET NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
+);
 -- ---------------------------------------------------------------------
 -- 4. Datos de prueba
 -- ---------------------------------------------------------------------
---  Los contadores `tareas_activas` coinciden con el número de
---  incidencias 'En Proceso' asignadas a cada técnico:
---    Laura  -> 2   |  Javier -> 1   |  Marta -> 0
---    Sergio -> 5   (al límite: se usa para forzar el fallo de la
---                   segunda parte de la transacción)
--- ---------------------------------------------------------------------
+-----
 INSERT INTO tecnicos (id, nombre, email, especialidad, tareas_activas) VALUES
     (1, 'Laura Gómez Ruiz',     'laura.gomez@soporte.local',   'Redes',               2),
     (2, 'Javier Martín López',  'javier.martin@soporte.local', 'Hardware',            1),
@@ -154,29 +112,3 @@ INSERT INTO incidencias (titulo, descripcion, prioridad, email_cliente, estado, 
      'Se desbloqueó la cuenta del usuario y se forzó el cambio de contraseña.',
      'Media',   'maria.lopez@empresa.local', 'Resuelta', 3);
 
--- ---------------------------------------------------------------------
--- 5. Consultas de verificación (descomentar para probar)
--- ---------------------------------------------------------------------
-
--- Panel principal: incidencias activas (no resueltas) con su técnico
--- SELECT i.id, i.titulo, i.prioridad, i.estado, i.email_cliente,
---        t.nombre AS tecnico
--- FROM incidencias i
--- LEFT JOIN tecnicos t ON t.id = i.tecnico_id
--- WHERE i.estado <> 'Resuelta'
--- ORDER BY FIELD(i.prioridad, 'Urgente', 'Alta', 'Media', 'Baja'), i.fecha_creacion;
-
--- Comprobar que los contadores cuadran con las incidencias en proceso
--- SELECT t.id, t.nombre, t.tareas_activas,
---        COUNT(i.id) AS en_proceso_reales
--- FROM tecnicos t
--- LEFT JOIN incidencias i ON i.tecnico_id = t.id AND i.estado = 'En Proceso'
--- GROUP BY t.id, t.nombre, t.tareas_activas;
-
--- Caso de prueba 3 (manual): la 2ª sentencia falla por el CHECK
--- y el ROLLBACK deja la incidencia 1 como estaba ('Pendiente', sin técnico)
--- START TRANSACTION;
---   UPDATE incidencias SET estado = 'En Proceso', tecnico_id = 4 WHERE id = 1;
---   UPDATE tecnicos SET tareas_activas = tareas_activas + 1 WHERE id = 4;  -- ERROR: chk_tareas_activas
--- ROLLBACK;
--- SELECT id, estado, tecnico_id FROM incidencias WHERE id = 1;
