@@ -58,6 +58,7 @@ if ($enviar) {
 <head>
     <meta charset="UTF-8">
     <title>Eliminar incidencia</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>

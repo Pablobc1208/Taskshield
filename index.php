@@ -42,6 +42,8 @@ function e(string $texto): string
 <head>
     <meta charset="UTF-8">
     <title>Incidencias activas</title>
+    <link rel="stylesheet" href="style.css">
+
 </head>
 
 <body>

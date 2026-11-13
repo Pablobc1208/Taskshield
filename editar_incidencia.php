@@ -82,6 +82,7 @@ $estados = ['Pendiente', 'En Proceso', 'Resuelta'];
 <head>
     <meta charset="UTF-8">
     <title>Editar incidencia</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
