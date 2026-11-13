@@ -1,3 +1,5 @@
+SET NAMES utf8mb4;
+
 -- ---------------------------------------------------------------------
 -- 1. Base de datos
 -- ---------------------------------------------------------------------
@@ -49,10 +51,10 @@ CREATE TABLE incidencias (
         ON UPDATE CASCADE
         ON DELETE SET NULL
 );
--- ---------------------------------------------------------------------
+-----------------------------------------------------------------------
 -- 4. Datos de prueba
--- ---------------------------------------------------------------------
------
+-----------------------------------------------------------------------
+
 INSERT INTO tecnicos (id, nombre, email, especialidad, tareas_activas) VALUES
     (1, 'Laura Gómez Ruiz',     'laura.gomez@soporte.local',   'Redes',               2),
     (2, 'Javier Martín López',  'javier.martin@soporte.local', 'Hardware',            1),
