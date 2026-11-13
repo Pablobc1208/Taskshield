@@ -1,4 +1,9 @@
 <?php
+/**
+ * Modificación de una incidencia.
+ * Recibe el ID por la URL, comprueba que la incidencia existe y permite
+ * cambiar su estado y el resto de sus datos.
+ */
 require_once __DIR__ . '/conexion.php';
 
 // ID de la incidencia recibido por la URL (editar_incidencia.php?id=5)

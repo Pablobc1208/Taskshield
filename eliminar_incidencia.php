@@ -1,4 +1,9 @@
 <?php
+/**
+ * Borrado de una incidencia.
+ * Recibe el ID por la URL, pide confirmación y elimina la incidencia,
+ * comprobando con rowCount() que el borrado se ha realizado.
+ */
 require_once __DIR__ . '/conexion.php';
 
 // ID de la incidencia recibido por la URL (eliminar_incidencia.php?id=5)

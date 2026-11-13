@@ -1,4 +1,9 @@
 <?php
+/**
+ * Conexión a la base de datos.
+ * Carga las credenciales de config.php y crea el objeto $pdo que usan
+ * el resto de páginas. Si falla, registra el error y muestra un mensaje genérico.
+ */
 require_once __DIR__ . '/config.php';
 
 try {

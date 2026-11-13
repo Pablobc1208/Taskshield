@@ -1,4 +1,9 @@
 <?php
+/**
+ * Alta de incidencias.
+ * Muestra el formulario y, al enviarlo, valida los datos con filter_input,
+ * inserta la incidencia y redirige usando el ID generado (lastInsertId).
+ */
 require_once __DIR__ . '/conexion.php';
 
 // Comprobar si se ha enviado el formulario (botón "enviar")
