@@ -1,5 +1,5 @@
 <?php
-require_once '/config.php';
+require_once __DIR__ . '/config.php';
 
 try {
     $opciones = [
@@ -7,7 +7,7 @@ try {
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
         PDO::ATTR_EMULATE_PREPARES => false,
     ];
-    $pdo = new PDO($dsn, DB_USER, DB_PASS, $opciones);
+    $pdo = new PDO(DB_DSN, DB_USER, DB_PASS, $opciones);
 } catch (PDOException $e) {
     // Registrar el error real en el log del servidor (no mostrarlo)
     error_log('Error de conexión: ' . $e->getMessage());
