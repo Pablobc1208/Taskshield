@@ -6,7 +6,7 @@ $enviar = filter_input(INPUT_POST, 'enviar', FILTER_SANITIZE_SPECIAL_CHARS);
 
 if ($enviar) {
     // Datos recibidos y validados previamente
-    $titulo = filter_input(INPUT_POST, 'titulo');
+    $titulo = filter_input(INPUT_POST, 'titulo', FILTER_SANITIZE_SPECIAL_CHARS);
     $descripcion = filter_input(INPUT_POST, 'descripcion', FILTER_SANITIZE_SPECIAL_CHARS);
     $prioridad = filter_input(INPUT_POST, 'prioridad', FILTER_SANITIZE_SPECIAL_CHARS);
     $email = filter_input(INPUT_POST, 'email_cliente', FILTER_VALIDATE_EMAIL);
@@ -31,7 +31,7 @@ if ($enviar) {
         $nuevoId = $pdo->lastInsertId();
 
         // Redirigir a la incidencia recién creada
-        header('Location: index.php?id=' . $nuevoId);
+        header('Location: editar_incidencia.php?id=' . $nuevoId);
         exit;
 
     } catch (PDOException $e) {

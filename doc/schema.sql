@@ -51,9 +51,9 @@ CREATE TABLE incidencias (
         ON UPDATE CASCADE
         ON DELETE SET NULL
 );
------------------------------------------------------------------------
+-- ---------------------------------------------------------------------
 -- 4. Datos de prueba
------------------------------------------------------------------------
+-- ---------------------------------------------------------------------
 
 INSERT INTO tecnicos (id, nombre, email, especialidad, tareas_activas) VALUES
     (1, 'Laura Gómez Ruiz',     'laura.gomez@soporte.local',   'Redes',               2),

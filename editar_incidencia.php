@@ -14,7 +14,7 @@ $msj = '';
 $enviar = filter_input(INPUT_POST, 'enviar', FILTER_SANITIZE_SPECIAL_CHARS);
 
 if ($enviar) {
-    $titulo = filter_input(INPUT_POST, 'titulo');
+    $titulo = filter_input(INPUT_POST, 'titulo', FILTER_SANITIZE_SPECIAL_CHARS);
     $descripcion = filter_input(INPUT_POST, 'descripcion', FILTER_SANITIZE_SPECIAL_CHARS);
     $prioridad = filter_input(INPUT_POST, 'prioridad', FILTER_SANITIZE_SPECIAL_CHARS);
     $email = filter_input(INPUT_POST, 'email_cliente', FILTER_VALIDATE_EMAIL);
@@ -86,18 +86,18 @@ $estados = ['Pendiente', 'En Proceso', 'Resuelta'];
 </head>
 
 <body>
-    <h1>Editar incidencia <? $incidencia['id'] ?></h1>
+    <h1>Editar incidencia <?= $incidencia['id'] ?></h1>
     <p><?= $msj ?></p>
     <form action="editar_incidencia.php?id=<?= $incidencia['id'] ?>" method="post">
         <p>
             <label for="titulo">Título</label><br>
             <input type="text" id="titulo" name="titulo"
-                value="<?= htmlspecialchars($incidencia['titulo'], ENT_QUOTES, 'UTF-8') ?>">
+                value="<?= htmlspecialchars($incidencia['titulo'], ENT_QUOTES, 'UTF-8', false) ?>">
         </p>
         <p>
             <label for="descripcion">Descripción</label><br>
             <textarea id="descripcion" name="descripcion" rows="5"
-                cols="50"><?= htmlspecialchars($incidencia['descripcion'], ENT_QUOTES, 'UTF-8') ?></textarea>
+                cols="50"><?= htmlspecialchars($incidencia['descripcion'], ENT_QUOTES, 'UTF-8', false) ?></textarea>
         </p>
         <p>
             <label for="prioridad">Prioridad</label><br>
@@ -112,7 +112,7 @@ $estados = ['Pendiente', 'En Proceso', 'Resuelta'];
         <p>
             <label for="email_cliente">Email del cliente</label><br>
             <input type="email" id="email_cliente" name="email_cliente"
-                value="<?= htmlspecialchars($incidencia['email_cliente'], ENT_QUOTES, 'UTF-8') ?>">
+                value="<?= htmlspecialchars($incidencia['email_cliente'], ENT_QUOTES, 'UTF-8', false) ?>">
         </p>
         <p>
             <label for="estado">Estado</label><br>

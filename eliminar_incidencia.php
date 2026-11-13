@@ -58,7 +58,7 @@ if ($enviar) {
 <head>
     <meta charset="UTF-8">
     <title>Eliminar incidencia</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -70,7 +70,7 @@ if ($enviar) {
         <p>¿Seguro que quieres eliminar esta incidencia?</p>
 
         <p>ID: <?= $incidencia['id'] ?></p>
-        <p>Título: <?= $incidencia['titulo'] ?></p>
+        <p>Título: <?= htmlspecialchars($incidencia['titulo'], ENT_QUOTES, 'UTF-8', false) ?></p>
         <p>Estado: <?= $incidencia['estado'] ?></p>
 
         <form action="eliminar_incidencia.php?id=<?= $incidencia['id'] ?>" method="post">
